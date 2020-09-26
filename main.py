@@ -1,4 +1,6 @@
 import os
+import re
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox, QFileDialog, QScrollArea
@@ -38,30 +40,29 @@ class Ui_MainWindow(QtWidgets.QWidget):
         while self.M - self.m > 2:
             self.me = int((self.m + self.M) / 2)
             # x = input('e mai buna ca ' + lista[me - 1][1] + '? (Y/N)')
-            global msg
             msg = QMessageBox()
-            msg.setWindowTitle('ma cac')
+            msg.setWindowTitle('???')
+            msg.setText("e mai buna ca " + lista[self.me - 1][1] + "?")
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            msg.buttonClicked(self.cand_apesi_pe_buton())
+            msg.buttonClicked.connect(self.cand_apesi_pe_buton)
+            x = msg.exec_()
+            if x == QMessageBox.Yes:
+                self.M = self.me
+                self.me = int((self.m + self.M) / 2)
+                print(self.m, self.me, self.M, x)
+            elif x == QMessageBox.No:
+                self.m = self.me + 1
+                self.me = int((self.m + self.M) / 2)
+                print(self.m, self.me, self.M, x)
+            else:
+                print(self.m, self.me, self.M, x)
 
-            global msg1
-            msg1 = QMessageBox()
-            msg1.setWindowTitle('ma cac1')
-            msg1.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            msg1.buttonClicked(self.cand_apesi_pe_buton1())
 
-    def cand_apesi_pe_buton(self):
-        x = msg.exec_()
-        if x == QMessageBox.Yes:
-            print('yes')
-            self.M = self.me
-            self.me = int((self.m + self.M) / 2)
-        elif x == QMessageBox.No:
-            print('no')
-            self.m = self.me + 1
-            self.me = int((self.m + self.M) / 2)
-
-    def cand_apesi_pe_buton1(self):
+        msg1 = QMessageBox()
+        msg1.setWindowTitle('???')
+        msg1.setText("e mai buna ca " + lista[self.me - 1][1] + "?")
+        msg1.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        msg1.buttonClicked.connect(self.cand_apesi_pe_buton1)
         x = msg1.exec_()
         if x == QMessageBox.Yes:
             self.continua = False
@@ -69,7 +70,14 @@ class Ui_MainWindow(QtWidgets.QWidget):
         elif x == QMessageBox.No:
             self.continua = False
             return self.M
+        else:
+            print(self.m, self.me, self.M, x)
 
+    def cand_apesi_pe_buton(self):
+        pass
+
+    def cand_apesi_pe_buton1(self):
+        pass
 
     def sorteaza(self, lista, loc, xx):
         if len(lista) == 0:
@@ -83,27 +91,42 @@ class Ui_MainWindow(QtWidgets.QWidget):
     def write_list(self):
         with open('list.txt', 'w') as filehandle:
             for listitem in self.thislist:
-                filehandle.write('%s\n' % listitem[0])
+                filehandle.write('%s. ' % listitem[0])
                 filehandle.write('%s\n' % listitem[1])
+
+    # def read_list(self):
+    #     with open('list.txt', 'r') as filehandle:
+    #         filecontents = filehandle.readlines()
+    #         self.thislist.clear()
+    #         i = 0
+    #         j = 0
+    #         a = [1000, 'testudrecu']
+    #
+    #         for line in filecontents:
+    #             line = line[:-1]
+    #             if j == 0:
+    #                 a[0] = int(line)
+    #             j = (j + 1) % 2
+    #             if j == 0:
+    #                 i += 1
+    #                 a[1] = line
+    #                 b = a[:]
+    #                 self.thislist.append(b)
 
     def read_list(self):
         with open('list.txt', 'r') as filehandle:
             filecontents = filehandle.readlines()
             self.thislist.clear()
-            i = 0
-            j = 0
             a = [1000, 'testudrecu']
-
             for line in filecontents:
-                line = line[:-1]
-                if j == 0:
-                    a[0] = int(line)
-                j = (j + 1) % 2
-                if j == 0:
-                    i += 1
-                    a[1] = line
-                    b = a[:]
-                    self.thislist.append(b)
+                x = line.split(". ", 2)
+                a[0] = int(x[0])
+                if re.search("(\\r|)\\n$", x[1]):
+                    x[1] = re.sub("(\\r|)\\n$", "", x[1])
+
+                a[1]=x[1]
+                b = a[:]
+                self.thislist.append(b)
 
     def deschide_fisier(self):
         ROOT_DIR = os.path.dirname(os.path.abspath("top_level_file.txt"))
@@ -134,7 +157,10 @@ class Ui_MainWindow(QtWidgets.QWidget):
 
     def takeinputs(self):
         xx, done1 = QtWidgets.QInputDialog.getText(self, 'Adauga Melodie', 'introdu o noua inregistrare:')
-        self.continua = True
+        if xx and done1 != '':
+            self.continua = True
+        else:
+            self.continua = False
         while self.continua:
             self.read_list()
             print(self.thislist)
