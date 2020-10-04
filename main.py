@@ -2,21 +2,23 @@ import os
 import re
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QKeySequence
-from PyQt5.QtWidgets import QMessageBox, QFileDialog, QScrollArea, QShortcut
+from PyQt5.QtWidgets import QMessageBox, QFileDialog, QScrollArea, QShortcut, QFormLayout, QGroupBox, QLabel, QTextEdit, \
+    QWidget, QVBoxLayout
 
 import sys
 
 open('list.txt', 'a').close()
 
 
-class Ui_MainWindow(QtWidgets.QWidget):
+class Ui_MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton2 = QtWidgets.QPushButton(self.centralwidget)
-        self.scroll_area = QScrollArea()
+        self.text = QTextEdit(self.centralwidget)
+        self.text.move(10, 50)
         self.setWindowIcon(QIcon('web.png'))
         self.thislist = [[0, 'a'], [1, 'b']]
         self.L = 0
@@ -44,7 +46,6 @@ class Ui_MainWindow(QtWidgets.QWidget):
             msg.setWindowTitle('Classification process')
             msg.setWindowIcon(QtGui.QIcon('web.png'))
             msg.setText("Is " + self.xx + " better than " + lista[self.me - 1][1] + "?")
-            #msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg.setEscapeButton(None)
             better = msg.addButton('Yes', QtWidgets.QMessageBox.ActionRole)
             worse = msg.addButton('No', QtWidgets.QMessageBox.ActionRole)
@@ -73,8 +74,6 @@ class Ui_MainWindow(QtWidgets.QWidget):
             self.continua = False
             return self.m
         msg1.setText("Is " + self.xx + " better than " + lista[self.me - 1][1] + "?")
-        #msg1.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-
         msg1.setIcon(QMessageBox.Question)
 
         msg1.buttonClicked.connect(self.cand_apesi_pe_buton1)
@@ -104,10 +103,14 @@ class Ui_MainWindow(QtWidgets.QWidget):
         lista.sort(key=self.myFunc, reverse=True)
 
     def write_list(self):
+        text = ''
         with open('list.txt', 'w') as filehandle:
             for listitem in self.thislist:
                 # filehandle.write('%s. ' % listitem[0])
                 filehandle.write('%s\n' % listitem[1])
+                text = text + listitem[1] + '\n'
+
+        self.text.setText(text)
 
     def read_list(self):
         with open('list.txt', 'r') as filehandle:
@@ -177,6 +180,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyle('fusion')
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
