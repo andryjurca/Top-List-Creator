@@ -3,25 +3,34 @@ import re
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWidgets import QMessageBox, QFileDialog, QScrollArea, QShortcut, QFormLayout, QGroupBox, QLabel, QTextEdit, \
-    QWidget, QVBoxLayout
+    QWidget, QVBoxLayout, QPushButton
 
 import sys
 
-open('list.txt', 'a').close()
+#open('list.txt', 'a').close()
 
 
 class Ui_MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.filename = ''
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton = QPushButton(self.centralwidget)
+        self.pushButton2 = QPushButton(self.centralwidget)
+        self.pushButton3 = QPushButton(self.centralwidget)
+        self.pushButton4 = QPushButton(self.centralwidget)
+        if self.filename == '':
+            self.pushButton.setHidden(True)
+            self.pushButton2.setHidden(True)
         self.text = QTextEdit(self.centralwidget)
-        self.text.move(10, 50)
+        self.text.setReadOnly(True)
+        self.text.move(10, 30)
+        self.text.setGeometry(10,50,400,150)
         self.setWindowIcon(QIcon('web.png'))
         self.thislist = [[0, 'a'], [1, 'b']]
         self.L = 0
+        self.continut = ''
         self.m = 1
         self.M = self.L + 1
         self.me = 0
@@ -103,17 +112,17 @@ class Ui_MainWindow(QWidget):
         lista.sort(key=self.myFunc, reverse=True)
 
     def write_list(self):
-        text = ''
-        with open('list.txt', 'w') as filehandle:
+        self.continut = ''
+        with open(self.filename[0], 'w') as filehandle:
             for listitem in self.thislist:
                 # filehandle.write('%s. ' % listitem[0])
                 filehandle.write('%s\n' % listitem[1])
-                text = text + listitem[1] + '\n'
+                self.continut = self.continut + listitem[1] + '\n'
 
-        self.text.setText(text)
+        self.text.setText(self.continut)
 
     def read_list(self):
-        with open('list.txt', 'r') as filehandle:
+        with open(self.filename[0], 'r') as filehandle:
             filecontents = filehandle.readlines()
             self.thislist.clear()
             a = [1000, 'testudrecu']
@@ -140,12 +149,37 @@ class Ui_MainWindow(QWidget):
 
         ROOT_DIR = os.path.dirname(os.path.abspath("top_level_file.txt"))
         os.system('cd ' + ROOT_DIR)
-        os.system('list.txt')
+        os.system(self.filename[0])
+
+
+    def open(self):
+        self.filename = QFileDialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
+        try:
+            with open(self.filename[0], 'r') as f:
+                file_text = f.read()
+                self.text.setText(file_text)
+                self.pushButton.setVisible(True)
+                self.pushButton2.setVisible(True)
+        except:
+            pass
+
+    def new(self):
+        self.filename = QFileDialog.getSaveFileName(self, 'Save File', os.getenv('HOME'))
+        try:
+            with open(self.filename[0], 'w') as f:
+                #my_text = self.text.toPlainText()
+                #f.write(my_text)
+                self.pushButton.setVisible(True)
+                self.pushButton2.setVisible(True)
+        except:
+            pass
 
     def setupUi(self, MainWindow):
         MainWindow.resize(422, 255)
-        self.pushButton.setGeometry(QtCore.QRect(10, 10, 120, 28))
-        self.pushButton2.setGeometry(QtCore.QRect(150, 10, 120, 28))
+        self.pushButton.setGeometry(QtCore.QRect(10, 210, 120, 28))
+        self.pushButton2.setGeometry(QtCore.QRect(150, 210, 120, 28))
+        self.pushButton3.setGeometry(QtCore.QRect(10, 10, 120, 28))
+        self.pushButton4.setGeometry(QtCore.QRect(150, 10, 120, 28))
         self.label.setGeometry(QtCore.QRect(170, 40, 201, 111))
         self.label.setText("")
         MainWindow.setCentralWidget(self.centralwidget)
@@ -158,8 +192,12 @@ class Ui_MainWindow(QWidget):
         MainWindow.setWindowTitle(_translate("MainWindow", "Top List Creator"))
         self.pushButton.setText(_translate("MainWindow", "Add listing"))
         self.pushButton2.setText(_translate("MainWindow", "Export list"))
+        self.pushButton3.setText(_translate('MainWindow', 'Open'))
+        self.pushButton4.setText(_translate('MainWindow', 'New'))
         self.pushButton.clicked.connect(self.takeinputs)
         self.pushButton2.clicked.connect(self.deschide_fisier)
+        self.pushButton3.clicked.connect(self.open)
+        self.pushButton4.clicked.connect(self.new)
 
     def takeinputs(self):
         self.xx, done1 = QtWidgets.QInputDialog.getText(self, 'Add listing', 'Listing name')
