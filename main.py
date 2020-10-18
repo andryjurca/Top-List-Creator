@@ -20,13 +20,18 @@ class Ui_MainWindow(QWidget):
         self.pushButton2 = QPushButton(self.centralwidget)
         self.pushButton3 = QPushButton(self.centralwidget)
         self.pushButton4 = QPushButton(self.centralwidget)
-        if self.filename == '':
-            self.pushButton.setHidden(True)
-            self.pushButton2.setHidden(True)
+        self.label = QLabel(self.centralwidget)
+        self.label.setText(self.filename)
+        self.label.setGeometry(0, 0, 4000, 20)
         self.text = QTextEdit(self.centralwidget)
         self.text.setReadOnly(True)
         self.text.move(10, 30)
-        self.text.setGeometry(10, 50, 400, 150)
+        self.text.setGeometry(10, 60, 400, 150)
+        if self.filename == '':
+            self.pushButton.setHidden(True)
+            self.pushButton2.setHidden(True)
+            self.text.setHidden(True)
+
         self.setWindowIcon(QIcon('web.png'))
         self.thislist = [[0, 'a'], [1, 'b']]
         self.L = 0
@@ -159,6 +164,8 @@ class Ui_MainWindow(QWidget):
                 self.text.setText(file_text)
                 self.pushButton.setVisible(True)
                 self.pushButton2.setVisible(True)
+                self.text.setVisible(True)
+                self.label.setText(self.filename[0])
         except:
             pass
 
@@ -171,15 +178,17 @@ class Ui_MainWindow(QWidget):
                 self.text.setText('')
                 self.pushButton.setVisible(True)
                 self.pushButton2.setVisible(True)
+                self.text.setVisible(True)
+                self.label.setText(self.filename[0])
         except:
             pass
 
     def setupUi(self, MainWindow):
         MainWindow.resize(422, 255)
-        self.pushButton.setGeometry(QtCore.QRect(10, 210, 120, 28))
-        self.pushButton2.setGeometry(QtCore.QRect(150, 210, 120, 28))
-        self.pushButton3.setGeometry(QtCore.QRect(10, 10, 120, 28))
-        self.pushButton4.setGeometry(QtCore.QRect(150, 10, 120, 28))
+        self.pushButton.setGeometry(QtCore.QRect(10, 220, 120, 28))
+        self.pushButton2.setGeometry(QtCore.QRect(150, 220, 120, 28))
+        self.pushButton3.setGeometry(QtCore.QRect(10, 20, 120, 28))
+        self.pushButton4.setGeometry(QtCore.QRect(150, 20, 120, 28))
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
