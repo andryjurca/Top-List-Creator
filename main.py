@@ -7,7 +7,8 @@ from PyQt5.QtWidgets import QMessageBox, QFileDialog, QScrollArea, QShortcut, QF
 
 import sys
 
-#open('list.txt', 'a').close()
+
+# open('list.txt', 'a').close()
 
 
 class Ui_MainWindow(QWidget):
@@ -15,7 +16,6 @@ class Ui_MainWindow(QWidget):
         super().__init__()
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.filename = ''
-        self.label = QtWidgets.QLabel(self.centralwidget)
         self.pushButton = QPushButton(self.centralwidget)
         self.pushButton2 = QPushButton(self.centralwidget)
         self.pushButton3 = QPushButton(self.centralwidget)
@@ -26,7 +26,7 @@ class Ui_MainWindow(QWidget):
         self.text = QTextEdit(self.centralwidget)
         self.text.setReadOnly(True)
         self.text.move(10, 30)
-        self.text.setGeometry(10,50,400,150)
+        self.text.setGeometry(10, 50, 400, 150)
         self.setWindowIcon(QIcon('web.png'))
         self.thislist = [[0, 'a'], [1, 'b']]
         self.L = 0
@@ -115,7 +115,7 @@ class Ui_MainWindow(QWidget):
         self.continut = ''
         with open(self.filename[0], 'w') as filehandle:
             for listitem in self.thislist:
-                # filehandle.write('%s. ' % listitem[0])
+                # filehandle.writme('%s. ' % listitem[0])
                 filehandle.write('%s\n' % listitem[1])
                 self.continut = self.continut + listitem[1] + '\n'
 
@@ -151,7 +151,6 @@ class Ui_MainWindow(QWidget):
         os.system('cd ' + ROOT_DIR)
         os.system(self.filename[0])
 
-
     def open(self):
         self.filename = QFileDialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
         try:
@@ -167,8 +166,9 @@ class Ui_MainWindow(QWidget):
         self.filename = QFileDialog.getSaveFileName(self, 'Save File', os.getenv('HOME'))
         try:
             with open(self.filename[0], 'w') as f:
-                #my_text = self.text.toPlainText()
-                #f.write(my_text)
+                # my_text = self.text.toPlainText()
+                # f.write(my_text)
+                self.text.setText('')
                 self.pushButton.setVisible(True)
                 self.pushButton2.setVisible(True)
         except:
@@ -180,8 +180,7 @@ class Ui_MainWindow(QWidget):
         self.pushButton2.setGeometry(QtCore.QRect(150, 210, 120, 28))
         self.pushButton3.setGeometry(QtCore.QRect(10, 10, 120, 28))
         self.pushButton4.setGeometry(QtCore.QRect(150, 10, 120, 28))
-        self.label.setGeometry(QtCore.QRect(170, 40, 201, 111))
-        self.label.setText("")
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
