@@ -1,7 +1,7 @@
 import os
 import re
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QIcon, QKeySequence
+from PyQt5.QtGui import QIcon, QKeySequence, QFont
 from PyQt5.QtWidgets import QMessageBox, QFileDialog, QScrollArea, QShortcut, QFormLayout, QGroupBox, QLabel, QTextEdit, \
     QWidget, QVBoxLayout, QPushButton
 
@@ -22,7 +22,8 @@ class Ui_MainWindow(QWidget):
         self.pushButton4 = QPushButton(self.centralwidget)
         self.label = QLabel(self.centralwidget)
         self.label.setText(self.filename)
-        self.label.setGeometry(0, 0, 4000, 20)
+        self.label.setFont(QFont('Arial',5))
+        self.label.setGeometry(10, 0, 4000, 20)
         self.text = QTextEdit(self.centralwidget)
         self.text.setReadOnly(True)
         self.text.move(10, 30)
