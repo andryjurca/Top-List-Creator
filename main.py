@@ -145,17 +145,20 @@ class Ui_MainWindow(QWidget):
                 else:
                     pass
 
-    def deschide_fisier(self):
-        msgb = QMessageBox()
-        msgb.setIcon(QMessageBox.Information)
-        msgb.setWindowTitle('Information')
-        msgb.setWindowIcon(QtGui.QIcon('web.png'))
-        msgb.setText("Don't forget to save a copy of the file!")
-        msgb.exec_()
+    # def deschide_fisier(self):
+    #     msgb = QMessageBox()
+    #     msgb.setIcon(QMessageBox.Information)
+    #     msgb.setWindowTitle('Information')
+    #     msgb.setWindowIcon(QtGui.QIcon('web.png'))
+    #     msgb.setText("Don't forget to save a copy of the file!")
+    #     msgb.exec_()
+    #
+    #     ROOT_DIR = os.path.dirname(os.path.abspath("top_level_file.txt"))
+    #     os.system('cd ' + ROOT_DIR)
+    #     os.system(self.filename[0])
 
-        ROOT_DIR = os.path.dirname(os.path.abspath("top_level_file.txt"))
-        os.system('cd ' + ROOT_DIR)
-        os.system(self.filename[0])
+    def deschide_fisier(self):
+        self.yy, done2 = QtWidgets.QInputDialog.getText(self, 'Remove listing', 'Listing name')
 
     def open(self):
         self.filename = QFileDialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
@@ -227,7 +230,7 @@ class Ui_MainWindow(QWidget):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyle('fusion')
+    app.setStyle('windowsvista')
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
