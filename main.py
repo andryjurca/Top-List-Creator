@@ -1,9 +1,10 @@
 import os
 import re
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QIcon, QKeySequence, QFont
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QKeySequence, QFont, QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import QMessageBox, QFileDialog, QScrollArea, QShortcut, QFormLayout, QGroupBox, QLabel, QTextEdit, \
-    QWidget, QVBoxLayout, QPushButton
+    QWidget, QVBoxLayout, QPushButton, QCompleter
 
 import sys
 
@@ -22,7 +23,7 @@ class Ui_MainWindow(QWidget):
         self.pushButton4 = QPushButton(self.centralwidget)
         self.label = QLabel(self.centralwidget)
         self.label.setText(self.filename)
-        self.label.setFont(QFont('Arial',5))
+        self.label.setFont(QFont('Arial', 5))
         self.label.setGeometry(10, 0, 4000, 20)
         self.text = QTextEdit(self.centralwidget)
         self.text.setReadOnly(True)
@@ -32,7 +33,6 @@ class Ui_MainWindow(QWidget):
             self.pushButton.setHidden(True)
             self.pushButton2.setHidden(True)
             self.text.setHidden(True)
-
         self.setWindowIcon(QIcon('web.png'))
         self.thislist = [[0, 'a'], [1, 'b']]
         self.L = 0
@@ -157,8 +157,20 @@ class Ui_MainWindow(QWidget):
     #     os.system('cd ' + ROOT_DIR)
     #     os.system(self.filename[0])
 
-    def deschide_fisier(self):
+    def sterge_listing(self):
         self.yy, done2 = QtWidgets.QInputDialog.getText(self, 'Remove listing', 'Listing name')
+        with open(self.filename[0], "r") as f:
+            lines = f.readlines()
+        with open(self.filename[0], "w") as f:
+            for line in lines:
+                if line.strip("\n") != self.yy:
+                    f.write(line)
+                    if self.yy == '':
+                        pass
+
+        with open(self.filename[0], 'r') as f:
+            text_capture = f.read()
+            self.text.setText(text_capture)
 
     def open(self):
         self.filename = QFileDialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
@@ -189,9 +201,10 @@ class Ui_MainWindow(QWidget):
 
     def setupUi(self, MainWindow):
         MainWindow.resize(422, 255)
+        #MainWindow.showFullScreen()
         self.pushButton.setGeometry(QtCore.QRect(10, 220, 120, 28))
         self.pushButton2.setGeometry(QtCore.QRect(150, 220, 120, 28))
-        self.pushButton3.setGeometry(QtCore.QRect(10, 20, 120, 28))
+        self.pushButton3.setGeometry(QtCore.QRect(10, 20, 120, 28))x
         self.pushButton4.setGeometry(QtCore.QRect(150, 20, 120, 28))
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -203,11 +216,11 @@ class Ui_MainWindow(QWidget):
         MainWindow.setWindowIcon(QIcon('web.png'))
         MainWindow.setWindowTitle(_translate("MainWindow", "Top List Creator"))
         self.pushButton.setText(_translate("MainWindow", "Add listing"))
-        self.pushButton2.setText(_translate("MainWindow", "Export list"))
+        self.pushButton2.setText(_translate("MainWindow", "Remove listing"))
         self.pushButton3.setText(_translate('MainWindow', 'Open'))
         self.pushButton4.setText(_translate('MainWindow', 'New'))
         self.pushButton.clicked.connect(self.takeinputs)
-        self.pushButton2.clicked.connect(self.deschide_fisier)
+        self.pushButton2.clicked.connect(self.sterge_listing)
         self.pushButton3.clicked.connect(self.open)
         self.pushButton4.clicked.connect(self.new)
 
@@ -230,7 +243,7 @@ class Ui_MainWindow(QWidget):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyle('windowsvista')
+    app.setStyle('windows')
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
