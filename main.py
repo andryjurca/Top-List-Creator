@@ -204,7 +204,7 @@ class Ui_MainWindow(QWidget):
         #MainWindow.showFullScreen()
         self.pushButton.setGeometry(QtCore.QRect(10, 220, 120, 28))
         self.pushButton2.setGeometry(QtCore.QRect(150, 220, 120, 28))
-        self.pushButton3.setGeometry(QtCore.QRect(10, 20, 120, 28))x
+        self.pushButton3.setGeometry(QtCore.QRect(10, 20, 120, 28))
         self.pushButton4.setGeometry(QtCore.QRect(150, 20, 120, 28))
 
         MainWindow.setCentralWidget(self.centralwidget)
